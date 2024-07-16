@@ -131,3 +131,10 @@ Depois de simplificar a matriz `A`, podemos resolver o sistema `Ax - b = 0` mod 
 - Simétrica, $A = A^T$
 - Binária, aceita apenas valores 0 ou 1
 - Diagonal principal com 1s, porque clicar na propria célula sempre afeta ela mesma
+
+# Referências
+
+- [Wikipedia](<https://en.wikipedia.org/wiki/Lights_Out_(game)>)
+- [Turning Lights Out with Linear Algebra](https://web.archive.org/web/20140815155142/https://www.math.ksu.edu/math551/math551a.f06/lights_out.pdf)
+- [LightsOut.hh](https://www.keithschwarz.com/interesting/code/?dir=lights-out)
+- [How To Solve LightsOut Puzzles](https://www.logicgamesonline.com/lightsout/tutorial.html)
