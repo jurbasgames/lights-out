@@ -125,3 +125,9 @@ Como o numpy não podemos usar o Gauss-Jordan do numpy, foi implementado o Gauss
 ### Resolvendo o sistema
 
 Depois de simplificar a matriz `A`, podemos resolver o sistema `Ax - b = 0` mod 2 fazendo a substituição de baixo para cima e reformar o vetor `x` para forma matricial. O resultado é a matriz de cliques para solucionar o jogo.
+
+## Propriedades da matriz `A`
+
+- Simétrica, $A = A^T$
+- Binária, aceita apenas valores 0 ou 1
+- Diagonal principal com 1s, porque clicar na propria célula sempre afeta ela mesma
