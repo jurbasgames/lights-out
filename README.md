@@ -1,24 +1,25 @@
-# Lights Out
+# Lights Out: Uma Perspectiva de Álgebra Linear
 
-Uma análise do jogo "Lights Out" utilizando algebra linear.
+## Introdução
+
+"Lights Out" é um quebra-cabeça matemático que se tornou popular devido à sua combinação única de simplicidade e complexidade. Aqui vamos explorar o jogo através de conceitos de álgebra linear, demonstrando como a matemática pode ser aplicada para resolver jogos de forma sistemática.
+
+Jogue "Lights Out" online: [Lights Out](https://www.logicgamesonline.com/lightsout/).
 
 ## O que é o Lights Out?
 
-Lights Out é um jogo quebra cabeça que é formado por um tabuleiro 5x5 onde cada célula representa uma luz, cada luz pode ser acesa ou apagada e o objetivo do jogo é apagar todas as luzes do tabuleiro.
+"Lights Out" é um jogo baseado em um tabuleiro 5x5 onde cada célula possui uma luz que pode estar acesa (1) ou apagada (0). O objetivo é apagar todas as luzes.
 
-Podemos jogar Lights Out online no link: [Lights Out](https://www.logicgamesonline.com/lightsout/)
+## Regras do Jogo
 
-## Regras do jogo
+1. Ao clicar em uma célula, essa célula e as adjacentes (acima, abaixo, esquerda, direita) alternam entre aceso e apagado.
+2. O jogador deve usar essa mecânica para apagar todas as luzes do tabuleiro.
 
-O jogo tem as seguintes regras:
+## Análise do Jogo
 
-1. Cada célula do tabuleiro pode ser acesa ou apagada.
-2. Ao clicar em uma célula, a célula clicada e as células adjacentes (acima, abaixo, esquerda e direita) mudam para o estado oposto, ou seja se estiver apagada ela acende e se estiver acesa ela apaga.
-3. O objetivo do jogo é apagar todas as luzes do tabuleiro.
+Representamos o tabuleiro como uma matriz 5x5 de zeros e uns. Aqui está um exemplo de um tabuleiro inicial e o efeito de um clique na célula (0,0):
 
-## Análise do jogo
-
-Um tabuleiro pode ser representado como uma matriz 5x5 de 0s e 1s, onde 0 representa uma luz apagada e 1 representa uma luz acesa.
+Estado inicial:
 
 $$
 \begin{bmatrix}
@@ -30,7 +31,7 @@ $$
 \end{bmatrix}
 $$
 
-Por exemplo, clicando na célula (0, 0) vamos ter o seguinte tabuleiro:
+Após clicar em (0, 0):
 
 $$
 \begin{bmatrix}
@@ -42,99 +43,50 @@ $$
 \end{bmatrix}
 $$
 
-Antes de resolver o jogo, podemos notar que clicar duas vezes na mesma célular é a mesma coisa que não clicar, portanto só assumimos valores 0 ou 1 nas entradas da matriz.
+Clicar duas vezes em uma célula equivale a não clicar, simplificando as possíveis entradas de solução para 0s e 1s.
 
-## Modelagem do problema
+## Modelagem Matemática
 
-Podemos modelar o problema como um sistema linear na forma `Ax = b`, onde `A` é a matriz de cliques, `b` é a matriz de estados das luzes do tabuleiro inicial na forma de vetor e `x` é o matriz de cliques que devemos fazer para apagar todas as luzes do tabuleiro em forma de vetor.
+Modelamos o problema como um sistema linear $Ax = b \mod 2$, onde $A$ é a matriz de cliques e $b$ o vetor estado das luzes. A ideia da modelagem é que dado um tabuleiro apagado uma sequencia de cliques foram feitas para chegar no tabuleiro atual.
 
-Como a operação é binária (clicar ou não clicar), podemos representar como um sistema mod 2.
+### Construção da Matriz $A$
 
-$$ Ax = b \mod 2 $$
+A matriz $A$ é construída considerando cada célula do tabuleiro como parte de um vetor de 25 entradas. Cada linha em $A$ representa o efeito de um clique em uma célula particular, ajustando seu estado e o das adjacências.
 
-### Construindo a matriz `A`
-
-Para construi-la vamos considerar que o tabuleiro seja um vetor de 25 células e cada linha da matriz `A` representa um clique em uma célula.
-
-Os índices do tabuleiro são:
+Exemplo de linha em $A$ para o clique em $b_0$:
 
 $$
 \begin{bmatrix}
-b_0 & b_1 & b_2 & b_3 & b_4 \\
-b_5 & b_6 & b_7 & b_8 & b_9 \\
-b_{10} & b_{11} & b_{12} & b_{13} & b_{14} \\
-b_{15} & b_{16} & b_{17} & b_{18} & b_{19} \\
-b_{20} & b_{21} & b_{22} & b_{23} & b_{24} \\
+1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & \cdots & 0
 \end{bmatrix}
 $$
 
-Vetor do tabuleiro vai ficar:
+### Solubilidade do Tabuleiro
 
-$$
-\begin{bmatrix}
-b_0 & b_1 & b_2 & b_3 & b_4 & b_5 & b_6 & b_7 & b_8 & b_9 & b_{10} & b_{11} & b_{12} & b_{13} & b_{14} & b_{15} & b_{16} & b_{17} & b_{18} & b_{19} & b_{20} & b_{21} & b_{22} & b_{23} & b_{24}
-\end{bmatrix}^T
-$$
+Para determinar se um tabuleiro é solucionável:
 
-Portanto, cada linha de `A` vai ser um vetor de 25 células inicialmente preenchidas com zeros no tabuleiro representando o efeito do clique naquela célula. Por exemplo a primeira linha de `A` representa o clique na célula $b_0$ do tabuleiro.
-Então a primeira linha de `A` vai ser:
+- **Determinante de $A$**: Se diferente de zero, o tabuleiro é solucionável.
+- **Posto de $A$**: Se completo, todas as configurações de luz são alcançáveis.
 
-$$
-\begin{bmatrix}
-1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
-\end{bmatrix}
-$$
+### Propriedades da Matriz $A$
 
-Montando `A` temos:
+- **Simetria**: $A$ é simétrica ($A = A^T$).
+- **Binariedade**: Aceita apenas 0s e 1s.
+- **Diagonal Principal**: Sempre 1s, pois um clique afeta a célula clicada.
 
-$$
-A = \begin{bmatrix}
-1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-1 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 & 1 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 1 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 \\
-\end{bmatrix}
-$$
+## Complexidade Algorítmica
 
-### Simplificando a matriz `A`
+- **Montagem de $A$**: $O(n^4)$.
+- **Gauss-Jordan mod 2**: $O(n^6)$ para simplificar $A$.
+- **Substituição Reversa**: $O(n^4)$ para encontrar a solução.
 
-Para resolver o jogo, precisamos de um vetor `x` que `Ax = b` mod 2,ou seja, `Ax - b = 0` mod 2. Mas antes podemos aplicar Gauss-Jordan mod 2 para simplificar a matriz `A`. Para zerar uma coluna usando de Gauss-Jordan mod 2, precisamos somar a linha que queremos zerar com as outras linhas que possuem 1 na coluna que queremos zerar, pois já que a operação é binária tanto faz somar ou subtrair.
-Como o numpy não podemos usar o Gauss-Jordan do numpy, foi implementado o Gauss-Jordan mod 2 manualmente.
+## Conclusão
 
-### Resolvendo o sistema
+Concluímos que o jogo pode ser resolvido de forma sistemática através de álgebra linear, o que permite encontrar soluções para qualquer tabuleiro de usando o menor número de cliques.
 
-Depois de simplificar a matriz `A`, podemos resolver o sistema `Ax - b = 0` mod 2 fazendo a substituição de baixo para cima e reformar o vetor `x` para forma matricial. O resultado é a matriz de cliques para solucionar o jogo.
+## Referências
 
-## Propriedades da matriz `A`
-
-- Simétrica, $A = A^T$
-- Binária, aceita apenas valores 0 ou 1
-- Diagonal principal com 1s, porque clicar na propria célula sempre afeta ela mesma
-
-# Referências
-
-- [Wikipedia](<https://en.wikipedia.org/wiki/Lights_Out_(game)>)
-- [Turning Lights Out with Linear Algebra](https://web.archive.org/web/20140815155142/https://www.math.ksu.edu/math551/math551a.f06/lights_out.pdf)
-- [LightsOut.hh](https://www.keithschwarz.com/interesting/code/?dir=lights-out)
-- [How To Solve LightsOut Puzzles](https://www.logicgamesonline.com/lightsout/tutorial.html)
+- [Wikipedia sobre Lights Out](<https://en.wikipedia.org/wiki/Lights_Out_(game)>)
+- [Análise Matemática do Jogo](https://web.archive.org/web/20140815155142/https://www.math.ksu.edu/math551/math551a.f06/lights_out.pdf)
+- [Código e Discussões Técnicas](https://www.keithschwarz.com/interesting/code/?dir=lights-out)
+- [Tutorial e Estratégias](https://www.logicgamesonline.com/lightsout/tutorial.html)
